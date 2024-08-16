@@ -34,10 +34,11 @@ class SearchProblem(ABC):
 
 	
 class ExplicitGraphSearchProblem(SearchProblem):
-	def __init__(self, edges, start, goals):
+	def __init__(self, edges, start, goals, heuristicDict=None):
 		self.edges = edges
 		self.start = start
 		self.goals = goals
+		self.heuristicDict = heuristicDict
 	
 	def start_node(self):
 		return self.start
@@ -49,6 +50,18 @@ class ExplicitGraphSearchProblem(SearchProblem):
 		neighbors = [edge for edge in self.edges if edge.u == node]
 		return neighbors
 	
+	def heuristic(self, node):
+		if self.heuristicDict is None:
+			return 0
+		return self.heuristicDict[node]
+
+	def __repr__(self):
+		adj_list = {}
+		for edge in self.edges:
+			adj_list[edge.u] = adj_list.get(edge.u, []) + [edge.v]
+		return repr(adj_list)
+
+     
 	
 class Path:
 	def __init__(self, initial, rem_path = None):
@@ -183,7 +196,8 @@ class UniformCostSearcher(Searcher):
 				new_path.add(neighbor, cost)
 				self.frontier.push(new_path)
 		
-searcher = UniformCostSearcher(problem1)
+searcher = DFSSearcher(problem1)
+
 
 for path in searcher.search():
 	print(path)	

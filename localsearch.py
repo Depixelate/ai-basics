@@ -91,9 +91,6 @@ class NQueensSearchProblem(SearchProblem):
 					num_queens_attacking += 1
 					
 		return num_queens_attacking
-		
-			
-	
 	
 class Path:
 	def __init__(self, initial, rem_path = None):
@@ -156,20 +153,45 @@ class Searcher(ABC):
 	def search(self):
 		pass
 
-def RandomRestartHillClimbingSearcher(Searcher):
+class RandomRestartHillClimbingSearcher(Searcher):
 	
-	def __init__(self, problem)
+	def __init__(self, problem):
 		self.problem = problem
 	
-	def singleHillClimb():
+	def singleHillClimb(self):
 		cur_node = self.problem.start_node()
+		history = [(cur_node, self.problem.heuristic(cur_node))]
 		while True:
 			next_node = min(self.problem.neighbors(cur_node), key=lambda edge: self.problem.heuristic(edge.v)).v
+			h_val = self.problem.heuristic(next_node)
 			if self.problem.heuristic(next_node) >= self.problem.heuristic(cur_node):
 				break
-		return cur_node
+			cur_node = next_node
+			history.append((next_node,  h_val))
+		return cur_node, history
 			
 	
-	def search():
-		while 
+	def search(self, max_climbs=1000):
+		climbs = 0
+		while climbs < max_climbs:
+			res_node, history = self.singleHillClimb()
+			h_val = self.problem.heuristic(res_node)
+			print(h_val)
+			if h_val == 0:
+				break
+			climbs += 1
+		return res_node, history
+
+
+searcher = RandomRestartHillClimbingSearcher(NQueensSearchProblem(8))
+
+res_node, history = searcher.search()
+
+print(f"Final State: {res_node}")
+print()
+print("History: ")
+for node,heuristic in history:
+	print(f"{node} - {heuristic}")
+
+
 
